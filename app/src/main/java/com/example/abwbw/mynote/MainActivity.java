@@ -1,27 +1,22 @@
 package com.example.abwbw.mynote;
 
 import android.os.Bundle;
-import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.CardView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.Menu;
-import android.view.MenuItem;
 
-import com.example.abwbw.mynote.adapter.MainNotesAdapter;
+import com.example.abwbw.mynote.adapter.NotesAdapter;
 import com.example.abwbw.mynote.base.BaseActivity;
 
-public class MainActivity extends BaseActivity {
-    private DrawerLayout mLeftDl;
-    private RecyclerView mContentRv;
-    private CardView mCardView;
+import widget.ItemTouchHelper;
 
+public class MainActivity extends BaseActivity {
+    private RecyclerView mContentRv;
+    private NotesAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_note_main);mCardView.set
+        setContentView(R.layout.activity_note_main);
         findView();
         initView();
     }
@@ -31,7 +26,28 @@ public class MainActivity extends BaseActivity {
     }
 
     private void initView(){
+        mAdapter = new NotesAdapter(this);
         mContentRv.setLayoutManager(new LinearLayoutManager(this));
-        mContentRv.setAdapter(new MainNotesAdapter(this));
+        mContentRv.setAdapter(mAdapter);
+        final ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.Callback() {
+            @Override
+            public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
+                int dragFlag = ItemTouchHelper.UP|ItemTouchHelper.DOWN;
+                int swipFlag = 0;
+                return makeMovementFlags( makeFlag(ItemTouchHelper.ACTION_STATE_DRAG,dragFlag),makeFlag(ItemTouchHelper.ACTION_STATE_SWIPE,swipFlag));
+            }
+
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                mAdapter.moveItem(viewHolder.getLayoutPosition(),target.getLayoutPosition());
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+
+            }
+        });
+        itemTouchHelper.attachToRecyclerView(mContentRv);
     }
 }
