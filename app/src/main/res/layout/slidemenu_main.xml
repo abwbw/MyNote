@@ -4,7 +4,7 @@
     android:layout_width="@dimen/slidemenu_width"
     android:layout_height="match_parent"
     android:gravity="center_horizontal"
-    android:background="@drawable/shape_rectangle_broad"
+    android:background="@drawable/shape_rectangle_full_broad"
     android:padding="10dp">
 
     <LinearLayout
@@ -19,7 +19,7 @@
             android:src="@drawable/def_head_img"
             android:paddingLeft="4dp"
             android:paddingRight="4dp"
-            android:background="@drawable/shape_rectangle_double_broad"/>
+            android:background="@drawable/shape_rectangle_white_broad"/>
 
         <TextView
             android:layout_width="wrap_content"
