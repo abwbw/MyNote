@@ -43,8 +43,8 @@ public class NotesAdapter extends RecyclerView.Adapter{
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int i) {
         NoteHolder holder = (NoteHolder) viewHolder;
         holder.mContentTv.setText("文本内容--\n" +
-                "文本内容--\n" +
-                "文本内容--\n" +
+                "文本内容0-00-\n" +
+                "文本内容666--\n" +
                 "文本内容--\n" +
                 "文本内容--\n" +
                 "文本内容--\n");

@@ -1,50 +1,70 @@
 package widget;
 
 import android.content.Context;
+import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
-import com.example.abwbw.mynote.R;
 import com.example.abwbw.mynote.util.LayoutInsertUtil;
+import com.example.abwbw.mynote.util.LogUtil;
 
 /**
  * Created by abwbw on 15-8-14.
  */
 public class RecyclerViewItemTouchHelper implements RecyclerView.OnItemTouchListener {
+    public static enum ActionStatus{
+        IDLE,PRESS,DRAGING
+    }
+
 
     private final int PASS=50;
 
-    private final int LONG_PRESS_TIMEOUT = 1000;
-
+    //原始坐标值
     private float mDownPointX = -1f;
     private float mDownPointY = -1f;
+    //最新运动值
     private float mLastPointX = -1f;
     private float mLastPointY = -1f;
 
-    private LongClickNotify mLongClickNotify= null;
-
+    //状态标记
     private boolean mIsLongClick = false;
-    private boolean mIsMove = false;
+
+    //子View锁,当被被捕获的时候,将进行锁定标记
     private boolean mIsLockItem = false;
+
+    //当前被锁定的ItemView,如果mIsLockItem为false 则该对象为null
     private View mCurLockItem;
+
+    //被绑定的mRecyclerView
     private RecyclerView mRecyclerView;
+
+    //被锁定时候所附加的视图状态
     private View mFoucseView;
 
-    private ItemEventListenter mItemListener;
-
     private Context mContext;
+
+    //标志与用户交互状态的参数
+    //RecyclerView的状态
+    private ActionStatus mRvActionStatus = ActionStatus.IDLE;
+    //RecyclerView Item的状态
+    private ActionStatus mCurItemActionStatus = ActionStatus.IDLE;
+
+    private GestureDetectorCompat mGestureDetector;
 
     public RecyclerViewItemTouchHelper(Context context,RecyclerView rv){
         this.mContext = context;
         this.mRecyclerView = rv;
+        this.mGestureDetector = new GestureDetectorCompat(context,new ItemTouchGestureListener());
     }
 
 
     @Override
     public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
+        mGestureDetector.onTouchEvent(e);
         boolean retuanResult = false;
         int pointNumber = e.getPointerCount();
         if(rv != null){
@@ -59,12 +79,12 @@ public class RecyclerViewItemTouchHelper implements RecyclerView.OnItemTouchList
                     mDownPointX = curX;
                     mDownPointY = curY;
 
+                    mRvActionStatus = ActionStatus.PRESS;
                     View curItem = lockItem(rv.findChildViewUnder(curX, curY));
-
                     if(curItem != null){
-                        mLongClickNotify = new LongClickNotify(curItem);
-                        curItem.postDelayed(mLongClickNotify,LONG_PRESS_TIMEOUT);
+                        mCurItemActionStatus = ActionStatus.PRESS;
                     }
+
                     break;
                 case MotionEvent.ACTION_MOVE:
 
@@ -75,12 +95,6 @@ public class RecyclerViewItemTouchHelper implements RecyclerView.OnItemTouchList
                     float dragDivX = curX - mDownPointX;
                     float dragDivY = curY - mDownPointY;
                     if ((Math.abs(dragDivX) > PASS || Math.abs(dragDivY) > PASS)) {
-                        mIsMove = true;
-                        //每次滑动的微差
-                        if(mLongClickNotify != null) {
-                            rv.removeCallbacks(mLongClickNotify);
-                        }
-
                         if(mLastPointX < 0 && mLastPointY < 0){
                             return retuanResult;
                         }
@@ -93,13 +107,7 @@ public class RecyclerViewItemTouchHelper implements RecyclerView.OnItemTouchList
                         if (mIsLongClick == true) {
                             curItem = lockItem(rv.findChildViewUnder(curX, curY));
                             if(curItem != null) {
-
-                                int newLeft = curItem.getLeft() + (int)smallDivX;
-                                int newRight = curItem.getRight() + (int)smallDivX;
-                                int newTop = curItem.getTop() + (int)smallDivY;
-                                int newBottom = curItem.getBottom() + (int)smallDivY;
-
-                                curItem.layout(newLeft, newTop, newRight, newBottom);
+                                move(curItem,smallDivX,smallDivY);
                             }
                         }
 
@@ -108,9 +116,6 @@ public class RecyclerViewItemTouchHelper implements RecyclerView.OnItemTouchList
                 case MotionEvent.ACTION_UP:
                     removeFocusView();
                     resetStateWhenUp();
-                    if(mLongClickNotify != null){
-                        rv.removeCallbacks(mLongClickNotify);
-                    }
                     break;
                 default:
             }
@@ -121,12 +126,26 @@ public class RecyclerViewItemTouchHelper implements RecyclerView.OnItemTouchList
         return retuanResult;
     }
 
-    private void beginScroll(){
-        mRecyclerView.setNestedScrollingEnabled(true);
+    @Override
+    public void onTouchEvent(RecyclerView rv, MotionEvent e) {
+        //对应DOWN响应不完全
+
     }
 
-    private void bandScroll(){
-        mRecyclerView.stopScroll();
+    @Override
+    public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
+
+    }
+
+    //根据坐标去捕获子View
+    private View catchItemViewFormPoint(float fromX,float fromY){
+        return lockItem(mRecyclerView.findChildViewUnder(fromX, fromY));
+    }
+
+    private View releaseCatchedItemView(){
+        if(mCurLockItem != null){
+
+        }
     }
 
     private void resetStateWhenUp(){
@@ -147,8 +166,12 @@ public class RecyclerViewItemTouchHelper implements RecyclerView.OnItemTouchList
 
     private void removeFocusView(){
         if(mFoucseView != null && mCurLockItem != null){
-            LayoutInsertUtil.removeView((ViewGroup) mCurLockItem,mFoucseView);
+            LayoutInsertUtil.removeView((ViewGroup) mCurLockItem, mFoucseView);
         }
+
+    }
+
+    private void switchPlaceView(){
 
     }
 
@@ -167,48 +190,19 @@ public class RecyclerViewItemTouchHelper implements RecyclerView.OnItemTouchList
         mCurLockItem = null;
     }
 
-    @Override
-    public void onTouchEvent(RecyclerView rv, MotionEvent e) {
-//                LogUtil.toast("itemTouchEvent");
-
+    public void move(View item,float divX,float divY){
+        int newLeft = item.getLeft() + (int)divX;
+        int newRight = item.getRight() + (int)divX;
+        int newTop = item.getTop() + (int)divY;
+        int newBottom = item.getBottom() + (int)divY;
+        item.layout(newLeft, newTop, newRight, newBottom);
     }
 
-    @Override
-    public void onRequestDisallowInterceptTouchEvent(boolean disallowIntercept) {
-//                LogUtil.toast("onRequestDisallowInterceptTouchEvent");
-
-    }
-
-    public void move(View parentView,View item,float toX,float toY){
-
-        ((ViewGroup)item.getParent()).invalidate();
-    }
-
-    private class LongClickNotify implements Runnable{
-        private View longClickView;
-        public LongClickNotify(View view){
-            longClickView = view;
-        }
-
+    private class ItemTouchGestureListener extends GestureDetector.SimpleOnGestureListener{
         @Override
-        public void run() {
-            if(longClickView != null){
-                longClickView.performLongClick();
-                mIsLongClick = true;
-            }
-
+        public void onLongPress(MotionEvent e) {
+            super.onLongPress(e);
+            mIsLongClick = true;
         }
-    }
-
-    public static interface ItemEventListenter {
-        void onItemClick(RecyclerView parent, View itemView);
-        void onItemLongClick(RecyclerView parent,View itemView);
-        void onItemSlip(RecyclerView parent,View itemView);
-    }
-
-    public static interface EventListener{
-        void onClick(RecyclerView parent);
-        void onLongClick(RecyclerView parent);
-        void onSlip(RecyclerView parent);
     }
 }
