@@ -19,6 +19,8 @@ public class ScaleCradView extends CardView {
         init(context);
     }
 
+
+
     public ScaleCradView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context);
