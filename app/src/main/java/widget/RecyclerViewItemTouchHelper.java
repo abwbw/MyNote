@@ -3,6 +3,7 @@ package widget;
 import android.content.Context;
 import android.support.v4.view.GestureDetectorCompat;
 import android.support.v7.widget.RecyclerView;
+import android.util.DisplayMetrics;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
@@ -114,6 +115,7 @@ public class RecyclerViewItemTouchHelper implements RecyclerView.OnItemTouchList
                             curItem = catchItemViewFormPoint(curX, curY);
                             if(curItem != null) {
                                 move(curItem,smallDivX,smallDivY);
+                                retuanResult = true;
                             }
                         }
 
@@ -230,13 +232,13 @@ public class RecyclerViewItemTouchHelper implements RecyclerView.OnItemTouchList
             int toTop = toView.getTop();
             int toBottom = toView.getBottom();
 
-            mRecyclerView.removeView(fromView);
-            mRecyclerView.addView(fromView, toPosition);
+//            mRecyclerView.removeView(fromView);
+//            mRecyclerView.addView(fromView, toPosition);
 
-            mRecyclerView.removeView(toView);
-            mRecyclerView.addView(toView, fromPosition);
-            toView.layout(toLeft,toTop,toRight,toBottom);
-            fromView.layout(fromLeft, fromTop, fromRight, fromBottom);
+//            mRecyclerView.removeView(toView);
+//            mRecyclerView.addView(toView, fromPosition);
+//            toView.layout(toLeft,toTop,toRight,toBottom);
+//            fromView.layout(fromLeft, fromTop, fromRight, fromBottom);
 
         }
 
@@ -256,6 +258,17 @@ public class RecyclerViewItemTouchHelper implements RecyclerView.OnItemTouchList
 //            removeFocusView();
         mCurLockItem = null;
     }
+
+
+    public int[] getScreenParams(){
+        int[] params = new int[]{0,0};
+        DisplayMetrics dm = mContext.getResources().getDisplayMetrics();
+        params[0] = dm.widthPixels;
+        params[1] = dm.heightPixels;
+        return params;
+    }
+
+
 
     public void move(View item,float divX,float divY){
         int newLeft = item.getLeft() + (int)divX;
