@@ -1,8 +1,18 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="android:windowContentOverlay">@null</item>
+    </style>
+
+    <!--stander single textview-->
+    <style name="TextStyle">
+        <item name="android:textColor">@color/text_normal</item>
+        <item name="android:textSize">@dimen/textsize_normal</item>
+    </style>
+    <style name="TextStyle.Single">
+        <item name="android:singleLine">true</item>
+        <item name="android:ellipsize">end</item>
     </style>
 </resources>

@@ -19,7 +19,9 @@ public class BaseActivity extends AppCompatActivity{
 
     private void initToolBar(){
         ActionBar acitonBar = getSupportActionBar();
-        acitonBar.setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.theme_main)));
-        acitonBar.setElevation(0);
+        if(acitonBar != null) {
+            acitonBar.setBackgroundDrawable(new ColorDrawable(getResources().getColor(R.color.theme_main)));
+            acitonBar.setElevation(0);
+        }
     }
 }

@@ -3,4 +3,7 @@
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
     <dimen name="slidemenu_width">200dp</dimen>
+
+    <!--Text Size-->
+    <dimen name="textsize_normal">15dp</dimen>
 </resources>

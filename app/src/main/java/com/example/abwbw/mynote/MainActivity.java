@@ -2,6 +2,7 @@ package com.example.abwbw.mynote;
 
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
@@ -13,12 +14,15 @@ import com.example.abwbw.mynote.model.NotesDesrcModel;
 
 import java.util.List;
 
+import widget.CardLayoutManager;
+import widget.RVItemTouchHelper;
 import widget.RecyclerViewItemTouchHelper;
 
 public class MainActivity extends BaseActivity {
     private RecyclerView mContentRv;
     private NotesAdapter mAdapter;
     private View mFocusView;
+    LinearLayoutManager llm;
 
 
     @Override
@@ -35,30 +39,10 @@ public class MainActivity extends BaseActivity {
     private void initView(){
         mAdapter = new NotesAdapter(this);
         createDataList();
-        mContentRv.setLayoutManager(new LinearLayoutManager(this));
+        LinearLayoutManager llm = new LinearLayoutManager(this);
+        mContentRv.setLayoutManager(llm);
         mContentRv.setAdapter(mAdapter);
-        mContentRv.addOnItemTouchListener(new RecyclerViewItemTouchHelper(this,mContentRv));
-//        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(new ItemTouchHelper.Callback() {
-//            @Override
-//            public int getMovementFlags(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder) {
-//                int dragFlag = ItemTouchHelper.UP | ItemTouchHelper.DOWN;
-//                int swipeFlag = ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT;
-//                return makeMovementFlags(dragFlag,swipeFlag);
-//            }
-//
-//            @Override
-//            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-//                mAdapter.swapItem(viewHolder.getLayoutPosition(),target.getLayoutPosition());
-//                return false;
-//            }
-//
-//            @Override
-//            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-//                mAdapter.removeItem(viewHolder.getLayoutPosition());
-//            }
-//        });
-//
-//        itemTouchHelper.attachToRecyclerView(mContentRv);
+
 
     }
 

@@ -71,6 +71,78 @@ public class RecyclerViewItemTouchHelper implements RecyclerView.OnItemTouchList
     @Override
     public boolean onInterceptTouchEvent(RecyclerView rv, MotionEvent e) {
         mGestureDetector.onTouchEvent(e);
+//        boolean retuanResult = false;
+//        int pointNumber = e.getPointerCount();
+//        if(rv != null){
+//            float curX=e.getX();
+//            float curY=e.getY();
+//
+//            mTouchInfo.curTouchX = curX;
+//            mTouchInfo.curTouchY = curY;
+//
+//            rv.stopScroll();
+//
+//            switch (e.getAction()){
+//                case MotionEvent.ACTION_DOWN:
+//                    mDownPointX = curX;
+//                    mDownPointY = curY;
+//
+//                    mTouchInfo.touchState = TouchState.PRESS;
+//
+//                    View curItem = catchItemViewFormPoint(curX, curY);
+//                    break;
+//                case MotionEvent.ACTION_MOVE:
+//
+//                    if(mDownPointX < 0  && mDownPointY < 0){
+//                        return retuanResult;
+//                    }
+//                    //距离第一次按下的滑动距差
+//                    float dragDivX = curX - mDownPointX;
+//                    float dragDivY = curY - mDownPointY;
+//                    if ((Math.abs(dragDivX) > PASS || Math.abs(dragDivY) > PASS)) {
+//                        if(mLastPointX < 0 && mLastPointY < 0){
+//                            return retuanResult;
+//                        }
+//
+//                        mTouchInfo.touchState = TouchState.DRAGING;
+//
+//                        float smallDivX = curX - mLastPointX;
+//                        smallDivX += (Math.signum(smallDivX) * 0.5f);
+//                        float smallDivY = curY - mLastPointY;
+//                        smallDivY += (Math.signum(smallDivY) * 0.5f);
+//
+//                        if (mIsLongClick == true) {
+//                            curItem = catchItemViewFormPoint(curX, curY);
+//                            if(curItem != null) {
+//                                move(curItem,smallDivX,smallDivY);
+//                                retuanResult = true;
+//                            }
+//                        }
+//
+//                    }
+//                    break;
+//                case MotionEvent.ACTION_UP:
+//
+//                    mTouchInfo.touchState = TouchState.IDLE;
+//
+//                    removeFocusView();
+//                    resetStateWhenUp();
+//                    break;
+//                default:
+//            }
+//            mLastPointX = curX;
+//            mLastPointY = curY;
+//        }
+
+        if(mIsLongClick){
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public void onTouchEvent(RecyclerView rv, MotionEvent e) {
+//        mGestureDetector.onTouchEvent(e);
         boolean retuanResult = false;
         int pointNumber = e.getPointerCount();
         if(rv != null){
@@ -94,14 +166,14 @@ public class RecyclerViewItemTouchHelper implements RecyclerView.OnItemTouchList
                 case MotionEvent.ACTION_MOVE:
 
                     if(mDownPointX < 0  && mDownPointY < 0){
-                        return retuanResult;
+                        return;
                     }
                     //距离第一次按下的滑动距差
                     float dragDivX = curX - mDownPointX;
                     float dragDivY = curY - mDownPointY;
                     if ((Math.abs(dragDivX) > PASS || Math.abs(dragDivY) > PASS)) {
                         if(mLastPointX < 0 && mLastPointY < 0){
-                            return retuanResult;
+                            return;
                         }
 
                         mTouchInfo.touchState = TouchState.DRAGING;
@@ -133,13 +205,6 @@ public class RecyclerViewItemTouchHelper implements RecyclerView.OnItemTouchList
             mLastPointX = curX;
             mLastPointY = curY;
         }
-
-        return retuanResult;
-    }
-
-    @Override
-    public void onTouchEvent(RecyclerView rv, MotionEvent e) {
-        //对应DOWN响应不完全
 
     }
 
