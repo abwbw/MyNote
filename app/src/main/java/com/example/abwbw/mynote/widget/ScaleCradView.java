@@ -1,12 +1,13 @@
-package widget;
+package com.example.abwbw.mynote.widget;
 
 import android.content.Context;
+import android.graphics.Camera;
+import android.graphics.Canvas;
+import android.graphics.Matrix;
 import android.support.v7.widget.CardView;
 import android.util.AttributeSet;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
-
-import com.example.abwbw.mynote.util.LogUtil;
 
 /**
  * Created by abwbw on 15-8-12.
@@ -40,6 +41,28 @@ public class ScaleCradView extends CardView {
     public boolean onTouchEvent(MotionEvent event) {
         mScaleDetector.onTouchEvent(event);
         return super.onTouchEvent(event);
+    }
+
+    @Override
+    protected void onDraw(Canvas canvas) {
+        Camera camera = new Camera();
+        camera.translate(0,getMeasuredHeight(),0);
+        camera.rotate(10, 0, 0);
+        Matrix mMatrix = new Matrix();
+        camera.getMatrix(mMatrix);
+        mMatrix.pre
+        camera.applyToCanvas(canvas);
+
+        super.onDraw(canvas);
+
+    }
+
+    @Override
+    protected void dispatchDraw(Canvas canvas) {
+
+        super.dispatchDraw(canvas);
+
+
     }
 
     public class ScaleGestureListener implements ScaleGestureDetector.OnScaleGestureListener{

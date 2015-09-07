@@ -1,4 +1,4 @@
-package widget;
+package com.example.abwbw.mynote.widget;
 
 import android.content.Context;
 import android.support.v4.view.GestureDetectorCompat;
@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.example.abwbw.mynote.util.LayoutInsertUtil;
-import com.example.abwbw.mynote.util.LogUtil;
 
 /**
  * Created by abwbw on 15-8-14.

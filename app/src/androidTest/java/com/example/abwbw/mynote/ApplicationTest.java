@@ -13,8 +13,4 @@ public class ApplicationTest extends ApplicationTestCase<Application> {
         super(Application.class);
     }
 
-    public void testScreenTest(){
-        ScreenUtil.getDipFormPrecent(0);
-    }
-
 }

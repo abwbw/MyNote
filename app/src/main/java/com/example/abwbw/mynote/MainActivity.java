@@ -2,21 +2,13 @@ package com.example.abwbw.mynote;
 
 import android.graphics.drawable.BitmapDrawable;
 import android.os.Bundle;
-import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 
 import com.example.abwbw.mynote.adapter.NotesAdapter;
 import com.example.abwbw.mynote.base.BaseActivity;
 import com.example.abwbw.mynote.model.NotesDesrcModel;
-
-import java.util.List;
-
-import widget.CardLayoutManager;
-import widget.RVItemTouchHelper;
-import widget.RecyclerViewItemTouchHelper;
 
 public class MainActivity extends BaseActivity {
     private RecyclerView mContentRv;

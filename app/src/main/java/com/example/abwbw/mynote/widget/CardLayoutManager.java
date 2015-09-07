@@ -1,4 +1,4 @@
-package widget;
+package com.example.abwbw.mynote.widget;
 
 import android.support.v7.widget.RecyclerView;
 
